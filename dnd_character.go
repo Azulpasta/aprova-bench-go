@@ -1,5 +1,10 @@
 package dndcharacter
 
+import (
+	"math/rand"
+	"sort"
+)
+
 type Character struct {
 	Strength     int
 	Dexterity    int
@@ -12,15 +17,33 @@ type Character struct {
 
 // Modifier calculates the ability modifier for a given ability score
 func Modifier(score int) int {
-	panic("Please implement the Modifier() function")
+	mod := score - 10
+	if mod < 0 {
+		mod -= 1
+	}
+	return mod / 2
 }
 
 // Ability uses randomness to generate the score for an ability
 func Ability() int {
-	panic("Please implement the Ability() function")
+	rolls := make([]int, 4)
+	for i := range rolls {
+		rolls[i] = rand.Intn(6) + 1
+	}
+	sort.Ints(rolls)
+	return rolls[1] + rolls[2] + rolls[3]
 }
 
 // GenerateCharacter creates a new Character with random scores for abilities
 func GenerateCharacter() Character {
-	panic("Please implement the GenerateCharacter() function")
+	c := Character{
+		Strength:     Ability(),
+		Dexterity:    Ability(),
+		Constitution: Ability(),
+		Intelligence: Ability(),
+		Wisdom:       Ability(),
+		Charisma:     Ability(),
+	}
+	c.Hitpoints = 10 + Modifier(c.Constitution)
+	return c
 }
